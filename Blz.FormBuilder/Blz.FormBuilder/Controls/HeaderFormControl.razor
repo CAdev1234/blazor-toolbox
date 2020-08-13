@@ -1,0 +1,54 @@
+﻿@inherits BaseEditorControl
+@inject IJSRuntime JSRuntime
+
+<div class="row" style="cursor:move" draggable="true" @ondragstart="OnDragStart">
+    <label style="cursor:move" @onclick="@(e=>clickHeaderControl(HeaderText, HeaderInputBg))">@HeaderText</label>
+    <input 
+        class="HeaderControl"
+        style="background-color:@HeaderInputBg; color: white;" 
+        type="text" 
+        value="@HeaderText" 
+        @onclick="@(() => ClickHeaderText(HeaderText, HeaderInputBg))"
+        @onchange="@(e=>changeHeaderText(e))"
+        @oninput="OnHeaderTextChanged"
+    />
+</div>
+@code{
+    public HeaderFormControl(string headertext)
+    {
+        this.HeaderText = headertext;
+    }
+
+    public HeaderFormControl() { }
+    [Parameter]
+    public string HeaderText { get; set; }
+    [Parameter]
+    public string HeaderInputBg { get; set; } = "#8a2be2";
+    [Parameter]
+    public EventCallback<string> HeaderTextChanged { get; set; }
+
+    private async void ClickHeaderText(string name, string bgcolor)
+    {
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.removeHighlightCss", this.Index);
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setControlProperty", name, bgcolor);
+    }
+    private void OnHeaderTextChanged(ChangeEventArgs e)
+    {
+        this.HeaderText = e.Value.ToString();
+    }
+
+    private void changeHeaderText(ChangeEventArgs args)
+    {
+        this.HeaderText = args.Value.ToString();
+        HeaderFormControl current_HeaderForm = CurrentForm.AllControls[this.Index] as HeaderFormControl;
+        current_HeaderForm.HeaderText = this.HeaderText ;
+    }
+
+    public async void clickHeaderControl(string name, string bgcolor)
+    {
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.removeHighlightCss", this.Index);
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setControlProperty", name, bgcolor);
+    }
+
+    
+}

@@ -1,0 +1,53 @@
+﻿@using Blz.FormBuilder.Controls
+@page "/formbuilder"
+@inject Services.AppData AppData
+
+<h3>FormBuilder</h3>
+<div class="main-container" style="margin-top: 20px;">
+        <div class="row">
+            <div class="col-2 toolboxside">
+                <ToolboxSide 
+                    OnNewHeaderDragEndEvent="CreateNewHeader"
+                    OnNewEntryDragEndEvent="CreateNewTextEntry"
+                >
+                </ToolboxSide>
+            </div>
+            <div class="col">
+                <FormControl AllControls="@_AllControls"></FormControl>
+            </div>
+            <div class="col-3 formdesigner">
+                <FormDesigner></FormDesigner>
+            </div>
+        </div>
+    </div>
+@code {
+    public List<BaseEditorControl> _AllControls { get; set; }
+    public BaseEditorControl _NewControl { get; set; }
+    protected override void OnInitialized()
+    {
+        this._AllControls = new List<BaseEditorControl>();
+        List<string> header_name = new List<string>();
+        List<string> textEntry_name = new List<string>();
+        header_name.Add("Control 1 (HeaderFormControlb)");
+        header_name.Add("Control 3 (HeaderFormControl)");
+        header_name.Add("Control 5 (Header)");
+        textEntry_name.Add("Control 2 (TextEntry)");
+        textEntry_name.Add("Control 4 (TextEntry)");
+        textEntry_name.Add("Control 6 (TextEntry)");
+        for (int i = 0; i < header_name.Count; i++)
+        {
+            _AllControls.Add(new HeaderFormControl(header_name[i]));
+            _AllControls.Add(new TextEntryFormControl(textEntry_name[i]));
+        }
+    }
+    public void CreateNewHeader()
+    {
+        HeaderFormControl newHeaderControl = new HeaderFormControl("New Header Control");
+        this._AllControls.Add(newHeaderControl);
+    }
+    public void CreateNewTextEntry()
+    {
+        TextEntryFormControl newTextEntryControl = new TextEntryFormControl("New TextEntry Control");
+        this._AllControls.Add(newTextEntryControl);
+    }
+}

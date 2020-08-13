@@ -1,0 +1,74 @@
+﻿<h5 style="margin-bottom:20px;">FormControl</h5>
+<div class="formcontrol-container">
+    @for (int i = 0; i < AllControls.Count; i++)
+    {
+        if (i == 0)
+        {
+            <DropableFormArea Index="@i" CurrentForm="@this"></DropableFormArea>
+        }
+        if (AllControls[i].GetType() == typeof(HeaderFormControl))
+        {
+            HeaderFormControl ctrl = AllControls[i] as HeaderFormControl;
+            <HeaderFormControl HeaderText="@ctrl.HeaderText" Index="@i" CurrentForm="@this"></HeaderFormControl>
+
+        }
+        if (AllControls[i].GetType() == typeof(TextEntryFormControl))
+        {
+            TextEntryFormControl ctrl = AllControls[i] as TextEntryFormControl;
+            <TextEntryFormControl EntryText="@ctrl.EntryText" Index="@i" CurrentForm="@this"></TextEntryFormControl>
+           
+        }
+        <DropableFormArea Index="@(i+1)" CurrentForm="@this"></DropableFormArea>
+        <br />
+    }
+</div>
+@code {
+    [Parameter]
+    public List<BaseEditorControl> AllControls { get; set; }
+
+    public FormControl() { }
+
+    public FormControl(List<BaseEditorControl> allControls) {
+        this.AllControls = allControls;
+    }
+
+
+    public void MovingControl(int DropIndex)
+    {
+        var draggedControl = AllControls[CurrentDragIndex];
+
+        if (DropIndex < AllControls.Count)
+        {
+            AllControls.Insert(DropIndex, draggedControl);
+        }
+        else
+        {
+            AllControls.Add(draggedControl);
+        }
+        if (CurrentDragIndex > DropIndex)
+        {
+            AllControls.RemoveAt(CurrentDragIndex + 1);
+        }
+        else
+        {
+            AllControls.RemoveAt(CurrentDragIndex);
+        }
+
+        CurrentDragIndex = -1;
+        StateHasChanged();
+    }
+
+    public int CurrentDragIndex = -1;
+
+    private void HandleDragEnter()
+    { //Console.WriteLine("Drag enter");
+    }
+    private void HandleDragLeave()
+    { //Console.WriteLine("Drag leave");
+    }
+
+    public void UpdateControls()
+    {
+    }
+
+}

@@ -1,0 +1,32 @@
+﻿@inherits IEditableControlProperty
+
+<h5 style="margin-bottom:20px;">Form Property</h5>
+<div class="form-property">
+    <div class="element-name" style="margin-bottom: 10px">
+        <span>Name:</span>
+        <input id="design_name" type="text" value="@_Name" @onchange="@((e)=>changePropertyName(e))"/>
+    </div>
+    <div class="element-bgcolor">
+        <span>Background Color:</span>
+        <input id="design_bg" type="color" value="@_Bg" @onchange="@((e)=>changePropertyBg(e))"/>
+    </div>
+</div>
+@code {
+    public string _Name { get; set; }
+    public string _Bg { get; set; }
+
+    public FormDesigner()
+    {
+        this._Bg = "#ff0000";
+    }
+    public void changePropertyName(ChangeEventArgs e)
+    {
+        this._Name = e.Value.ToString();
+        GetPropertyEditor_EditableProperties(this._Name, this._Bg);
+    }
+    public void changePropertyBg(ChangeEventArgs e)
+    {
+        this._Bg = e.Value.ToString();
+        GetPropertyEditor_EditableProperties(this._Name, this._Bg);
+    }
+}

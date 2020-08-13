@@ -1,0 +1,53 @@
+﻿@inherits BaseEditorControl
+@inject IJSRuntime JSRuntime
+
+
+<div class="row" style="cursor:move;" draggable="true" @ondragstart="OnDragStart">
+    <label style="cursor:move;" @onclick="@(()=>EntryControlClick(EntryText, EntryBg))">@EntryText</label>
+    <input 
+        class="TextEntryControl @HighlightCss"
+        style="background-color:@EntryBg; color: white;"  
+        type="text" 
+        value="@EntryText" 
+        @onclick="@(e=>ClickTextEntryText(EntryText, EntryBg))"
+        @onchange="@(e=>changeEntryText(e))"
+        @oninput="OnEntryTextChanged"
+    />
+</div>
+@code {
+    public TextEntryFormControl(string textEntry)
+    {
+        this.EntryText = textEntry;
+    }
+    public TextEntryFormControl() { }
+
+    [Parameter]
+    public string EntryText { get; set; }
+    [Parameter]
+    public string EntryBg { get; set; } = "#5f9ea0";
+    [Parameter]
+    public EventCallback<string> EntryTextChanged { get; set; }
+
+    private async void ClickTextEntryText(string name, string bgcolor)
+    {
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setControlProperty", name, bgcolor);
+    }
+    private void OnEntryTextChanged(ChangeEventArgs e)
+    {
+        this.EntryText = e.Value.ToString();
+    }
+
+    public async void EntryControlClick(string name, string bgcolor) {
+        
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.removeHighlightCss", this.Index);
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setControlProperty", name, bgcolor);
+
+    }
+    public async void changeEntryText(ChangeEventArgs args)
+    {
+        this.EntryText = args.Value.ToString();
+        TextEntryFormControl current_entryForm = CurrentForm.AllControls[this.Index] as TextEntryFormControl;
+        current_entryForm.EntryText = this.EntryText;
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.removeHighlightCss", this.Index);
+    }
+}

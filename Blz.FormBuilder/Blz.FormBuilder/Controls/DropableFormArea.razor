@@ -1,0 +1,16 @@
+﻿@*<h3>DropableFormArea</h3>*@
+@inherits BaseEditorControl
+
+
+<div class="dropzone @CSSClass"
+     ondragover="event.preventDefault();"
+     ondragstart="event.dataTransfer.setData('', event.target.id);"
+     @ondragenter="HandleDragEnter"
+     @ondragleave="HandleDragLeave"
+     @ondrop="HandleDrop">
+</div>
+
+
+@code {
+
+}

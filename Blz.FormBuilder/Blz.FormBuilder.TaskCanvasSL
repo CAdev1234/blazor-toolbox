@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SerializableModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <tasks>
+    <tasks>
+      <Task>
+        <blocks />
+        <tabs>
+          <DocumentTab>
+            <name>FormControl.razor</name>
+            <path>Blz.FormBuilder\Controls\FormControl.razor</path>
+            <absolutePath>C:\Users\Pete\Downloads\Blz.FormBuilder (6)\Blz.FormBuilder\Blz.FormBuilder\Controls\FormControl.razor</absolutePath>
+            <position>
+              <line>53</line>
+              <column>43</column>
+              <lineHash>wvt9zzhVoy3S7aCLLtRl/ZMednTAxqBX5SR2UA4/sj4=</lineHash>
+            </position>
+          </DocumentTab>
+          <DocumentTab>
+            <name>FormControls.cs</name>
+            <absolutePath>C:\Users\Pete\Downloads\Blz.FormBuilder\Blz.FormBuilder\Blz.FormBuilder\Controls\FormControls.cs</absolutePath>
+            <position>
+              <line>12</line>
+              <column>27</column>
+              <lineHash>07LN1QUZgC39YbsUYBfZP7rOK3CYRQXV8cIxgIL/yXY=</lineHash>
+            </position>
+          </DocumentTab>
+          <DocumentTab>
+            <name>ReadME.md</name>
+            <path>Blz.FormBuilder\ReadME.md</path>
+            <absolutePath>C:\Users\Pete\Downloads\Blz.FormBuilder (6)\Blz.FormBuilder\Blz.FormBuilder\ReadME.md</absolutePath>
+            <position>
+              <line>33</line>
+              <column>1</column>
+              <lineHash>ECtRuXZaVqPomffPDuOOUlH5xQOzV7MwpJGD63sVVgQ=</lineHash>
+            </position>
+          </DocumentTab>
+          <DocumentTab>
+            <name>IFormControl.cs</name>
+            <absolutePath>C:\Users\Pete\Downloads\Blz.FormBuilder\Blz.FormBuilder\Blz.FormBuilder\Controls\IFormControl.cs</absolutePath>
+            <position>
+              <line>12</line>
+              <column>1</column>
+              <lineHash>ECtRuXZaVqPomffPDuOOUlH5xQOzV7MwpJGD63sVVgQ=</lineHash>
+            </position>
+          </DocumentTab>
+          <DocumentTab>
+            <name>TextEntryFormControl.cs</name>
+            <absolutePath>C:\Users\Pete\Downloads\Blz.FormBuilder\Blz.FormBuilder\Blz.FormBuilder\Controls\TextEntryFormControl.cs</absolutePath>
+            <position>
+              <line>2</line>
+              <column>34</column>
+              <lineHash>NKBtlhEuZVMQOB6BAk5sL1ppCA7frMSJB9sqE6CemYg=</lineHash>
+            </position>
+          </DocumentTab>
+          <DocumentTab>
+            <name>ClassDiagram.cd</name>
+            <path>Blz.FormBuilder\Controls\ClassDiagram.cd</path>
+            <absolutePath>C:\Users\Pete\Downloads\Blz.FormBuilder (6)\Blz.FormBuilder\Blz.FormBuilder\Controls\ClassDiagram.cd</absolutePath>
+          </DocumentTab>
+        </tabs>
+        <name>Misc</name>
+        <selectedBlock>-1</selectedBlock>
+        <selectedTab>-1</selectedTab>
+        <startupProjects />
+        <startupProjectsInitialized>false</startupProjectsInitialized>
+      </Task>
+    </tasks>
+    <selectedTask>0</selectedTask>
+  </tasks>
+</SerializableModel>
