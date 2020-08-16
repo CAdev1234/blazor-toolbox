@@ -13,16 +13,26 @@
                 </ToolboxSide>
             </div>
             <div class="col">
-                <FormControl AllControls="@_AllControls"></FormControl>
+                <FormControl 
+                    AllControls="@_AllControls" 
+                    ControlNameFromProperty="@ControlNameFromProperty" 
+                    ControlBgFromProperty="@ControlBgFromProperty">
+                </FormControl>
             </div>
             <div class="col-3 formdesigner">
-                <FormDesigner></FormDesigner>
+                <CascadingValue Value="_AllControls">
+                    <FormDesigner></FormDesigner>
+                </CascadingValue>
             </div>
         </div>
     </div>
 @code {
     public List<BaseEditorControl> _AllControls { get; set; }
     public BaseEditorControl _NewControl { get; set; }
+    [Parameter]
+    public string ControlNameFromProperty { get; set; }
+    [Parameter]
+    public string ControlBgFromProperty { get; set; }
     protected override void OnInitialized()
     {
         this._AllControls = new List<BaseEditorControl>();
@@ -36,18 +46,39 @@
         textEntry_name.Add("Control 6 (TextEntry)");
         for (int i = 0; i < header_name.Count; i++)
         {
-            _AllControls.Add(new HeaderFormControl(header_name[i]));
-            _AllControls.Add(new TextEntryFormControl(textEntry_name[i]));
+            _AllControls.Add(new HeaderFormControl(header_name[i], "default"));
+            _AllControls.Add(new TextEntryFormControl(textEntry_name[i], "default"));
         }
     }
     public void CreateNewHeader()
     {
-        HeaderFormControl newHeaderControl = new HeaderFormControl("New Header Control");
+        HeaderFormControl newHeaderControl = new HeaderFormControl("New Header Control", "default");
         this._AllControls.Add(newHeaderControl);
     }
     public void CreateNewTextEntry()
     {
-        TextEntryFormControl newTextEntryControl = new TextEntryFormControl("New TextEntry Control");
+        TextEntryFormControl newTextEntryControl = new TextEntryFormControl("New TextEntry Control", "default");
         this._AllControls.Add(newTextEntryControl);
     }
+
+
+    protected override Task OnParametersSetAsync()
+    {
+        Console.WriteLine("OnParametersSetAsync method");
+        Console.WriteLine(this.ControlNameFromProperty);
+        return base.OnParametersSetAsync();
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine("OnAfterRender method");
+        Console.WriteLine(this.ControlNameFromProperty);
+        base.OnAfterRender(firstRender);
+    }
+    protected override bool ShouldRender()
+    {
+        Console.WriteLine("ShouldRender method");
+        Console.WriteLine(this.ControlNameFromProperty);
+        return base.ShouldRender();
+    }
+
 }

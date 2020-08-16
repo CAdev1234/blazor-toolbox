@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Blz.FormBuilder.Data;
 using Blz.FormBuilder.Services;
+using Blz.FormBuilder.Controls;
 
 namespace Blz.FormBuilder
 {
@@ -31,6 +32,7 @@ namespace Blz.FormBuilder
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<AppData>();
+            services.AddSingleton<IEditableControlProperty>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

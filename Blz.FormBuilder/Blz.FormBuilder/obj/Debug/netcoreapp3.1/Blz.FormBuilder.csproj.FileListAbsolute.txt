@@ -9,7 +9,6 @@ C:\Users\Hazard\source\repos\Blz.FormBuilder\Blz.FormBuilder\bin\Debug\netcoreap
 C:\Users\Hazard\source\repos\Blz.FormBuilder\Blz.FormBuilder\bin\Debug\netcoreapp3.1\Blz.FormBuilder.pdb
 C:\Users\Hazard\source\repos\Blz.FormBuilder\Blz.FormBuilder\bin\Debug\netcoreapp3.1\Blz.FormBuilder.Views.dll
 C:\Users\Hazard\source\repos\Blz.FormBuilder\Blz.FormBuilder\bin\Debug\netcoreapp3.1\Blz.FormBuilder.Views.pdb
-C:\Users\Hazard\source\repos\Blz.FormBuilder\Blz.FormBuilder\obj\Debug\netcoreapp3.1\Blz.FormBuilder.csprojAssemblyReference.cache
 C:\Users\Hazard\source\repos\Blz.FormBuilder\Blz.FormBuilder\obj\Debug\netcoreapp3.1\Blz.FormBuilder.AssemblyInfoInputs.cache
 C:\Users\Hazard\source\repos\Blz.FormBuilder\Blz.FormBuilder\obj\Debug\netcoreapp3.1\Blz.FormBuilder.AssemblyInfo.cs
 C:\Users\Hazard\source\repos\Blz.FormBuilder\Blz.FormBuilder\obj\Debug\netcoreapp3.1\Blz.FormBuilder.csproj.CoreCompileInputs.cache

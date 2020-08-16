@@ -45,13 +45,11 @@
 
     public void OnNewHeaderDragStart()
     {
-        HeaderFormControl newHeaderControl = new HeaderFormControl("New Header Control");
+        HeaderFormControl newHeaderControl = new HeaderFormControl("New Header Control", "");
         this.NewControl = newHeaderControl;
-        Console.WriteLine("New HeaderControl Drag Start");
     }
     public void OnNewEntryDragStart()
     {
-        TextEntryFormControl newTextEntryControl = new TextEntryFormControl("New TextEntry Control");
-        Console.WriteLine("New TextEntryControl Drag Start");
+        TextEntryFormControl newTextEntryControl = new TextEntryFormControl("New TextEntry Control", "");
     }
 }

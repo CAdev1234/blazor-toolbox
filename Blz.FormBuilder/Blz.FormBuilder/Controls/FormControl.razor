@@ -9,13 +9,13 @@
         if (AllControls[i].GetType() == typeof(HeaderFormControl))
         {
             HeaderFormControl ctrl = AllControls[i] as HeaderFormControl;
-            <HeaderFormControl HeaderText="@ctrl.HeaderText" Index="@i" CurrentForm="@this"></HeaderFormControl>
+            <HeaderFormControl HeaderText="@ctrl.HeaderText" HeaderInputBg="@ctrl.HeaderInputBg" Index="@i" CurrentForm="@this"></HeaderFormControl>
 
         }
         if (AllControls[i].GetType() == typeof(TextEntryFormControl))
         {
             TextEntryFormControl ctrl = AllControls[i] as TextEntryFormControl;
-            <TextEntryFormControl EntryText="@ctrl.EntryText" Index="@i" CurrentForm="@this"></TextEntryFormControl>
+            <TextEntryFormControl EntryText="@ctrl.EntryText" EntryBg="@ctrl.EntryBg" Index="@i" CurrentForm="@this"></TextEntryFormControl>
            
         }
         <DropableFormArea Index="@(i+1)" CurrentForm="@this"></DropableFormArea>
@@ -25,6 +25,10 @@
 @code {
     [Parameter]
     public List<BaseEditorControl> AllControls { get; set; }
+    [Parameter]
+    public string ControlNameFromProperty { get; set; }
+    [Parameter]
+    public string ControlBgFromProperty { get; set; }
 
     public FormControl() { }
 
@@ -70,5 +74,6 @@
     public void UpdateControls()
     {
     }
+
 
 }

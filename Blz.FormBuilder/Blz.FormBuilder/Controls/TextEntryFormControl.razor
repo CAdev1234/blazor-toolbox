@@ -2,7 +2,7 @@
 @inject IJSRuntime JSRuntime
 
 
-<div class="row" style="cursor:move;" draggable="true" @ondragstart="OnDragStart">
+<div class="row control-div" style="cursor:move;" draggable="true" @ondragstart="OnDragStart">
     <label style="cursor:move;" @onclick="@(()=>EntryControlClick(EntryText, EntryBg))">@EntryText</label>
     <input 
         class="TextEntryControl @HighlightCss"
@@ -15,22 +15,30 @@
     />
 </div>
 @code {
-    public TextEntryFormControl(string textEntry)
-    {
-        this.EntryText = textEntry;
-    }
-    public TextEntryFormControl() { }
-
     [Parameter]
     public string EntryText { get; set; }
     [Parameter]
-    public string EntryBg { get; set; } = "#5f9ea0";
+    public string EntryBg { get; set; }
     [Parameter]
     public EventCallback<string> EntryTextChanged { get; set; }
 
+    public TextEntryFormControl() { }
+
+    public TextEntryFormControl(string textEntry, string bg)
+    {
+        this.EntryText = textEntry;
+        if (bg == "default")
+        {
+            this.EntryBg = "#5f9ea0";
+        }else
+        {
+            this.EntryBg = bg;
+        }
+    }
+
     private async void ClickTextEntryText(string name, string bgcolor)
     {
-        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setControlProperty", name, bgcolor);
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setControlProperty", this.Index);
     }
     private void OnEntryTextChanged(ChangeEventArgs e)
     {
@@ -38,9 +46,9 @@
     }
 
     public async void EntryControlClick(string name, string bgcolor) {
-        
+
         await JSRuntime.InvokeVoidAsync("FormDesignerJs.removeHighlightCss", this.Index);
-        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setControlProperty", name, bgcolor);
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setControlProperty", this.Index);
 
     }
     public async void changeEntryText(ChangeEventArgs args)
@@ -49,5 +57,6 @@
         TextEntryFormControl current_entryForm = CurrentForm.AllControls[this.Index] as TextEntryFormControl;
         current_entryForm.EntryText = this.EntryText;
         await JSRuntime.InvokeVoidAsync("FormDesignerJs.removeHighlightCss", this.Index);
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setControlProperty", this.Index);
     }
 }

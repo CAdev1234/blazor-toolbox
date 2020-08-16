@@ -1,32 +1,82 @@
-﻿@inherits IEditableControlProperty
+﻿@inject IJSRuntime JSRuntime
+@inject IEditableControlProperty IEditableControlProperty
 
 <h5 style="margin-bottom:20px;">Form Property</h5>
+<div class="current-control-index"></div>
 <div class="form-property">
     <div class="element-name" style="margin-bottom: 10px">
         <span>Name:</span>
-        <input id="design_name" type="text" value="@_Name" @onchange="@((e)=>changePropertyName(e))"/>
+        <input id="design_name"
+               type="text"
+               value="@PropertyName"
+               @onchange="@((e)=>OnchangePropertyName(e))" />
     </div>
     <div class="element-bgcolor">
         <span>Background Color:</span>
-        <input id="design_bg" type="color" value="@_Bg" @onchange="@((e)=>changePropertyBg(e))"/>
+        <input id="design_bg"
+               type="color"
+               value="@PropertyBg"
+               @onchange="@((e)=>OnchangePropertyBg(e))" />
     </div>
 </div>
 @code {
-    public string _Name { get; set; }
-    public string _Bg { get; set; }
+    [Parameter]
+    public string PropertyName { get; set; }
+    [Parameter]
+    public string PropertyBg { get; set; }
+    [Parameter]
+    public int PropertyIndex { get; set; }
+    [Parameter]
+    public List<BaseEditorControl> PropertyAllControl { get; set; }
+    [Parameter]
+    public EventCallback PropertyNameChangedEvent { get; set; }
+    [Parameter]
+    public EventCallback PropertyBgChangedEvent { get; set; }
+    [CascadingParameter]
+    public List<BaseEditorControl> AllControls { get; set; }
+
 
     public FormDesigner()
     {
-        this._Bg = "#ff0000";
+
     }
-    public void changePropertyName(ChangeEventArgs e)
-    {
-        this._Name = e.Value.ToString();
-        GetPropertyEditor_EditableProperties(this._Name, this._Bg);
+    public FormDesigner(List<BaseEditorControl> allControls) {
+        this.PropertyAllControl = allControls;
     }
-    public void changePropertyBg(ChangeEventArgs e)
+    public async void OnchangePropertyName(ChangeEventArgs e)
     {
-        this._Bg = e.Value.ToString();
-        GetPropertyEditor_EditableProperties(this._Name, this._Bg);
+        this.PropertyName = e.Value.ToString();
+        var dotNetReference = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.getPropertyIndex", dotNetReference);
+
+    }
+    public async void OnchangePropertyBg(ChangeEventArgs e)
+    {
+        this.PropertyBg = e.Value.ToString();
+        var dotNetReference1 = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.getPropertyIndex", dotNetReference1);
+    }
+
+    [JSInvokable("UpdateAllControls")]
+    public async void UpdateAllControlsByIndex(string index, string name, string bgcolor)
+    {
+        this.PropertyIndex = Int16.Parse(index);
+        this.PropertyName = name;
+        this.PropertyBg = bgcolor;
+        if (AllControls[this.PropertyIndex].GetType() == typeof(HeaderFormControl))
+        {
+            HeaderFormControl ctrl = AllControls[this.PropertyIndex] as HeaderFormControl;
+            ctrl.HeaderText = this.PropertyName;
+            ctrl.HeaderInputBg = this.PropertyBg;
+
+        }
+        if (AllControls[this.PropertyIndex].GetType() == typeof(TextEntryFormControl))
+        {
+            Console.WriteLine("wefhwefhiwehfow;f");
+            TextEntryFormControl ctrl = AllControls[this.PropertyIndex] as TextEntryFormControl;
+            ctrl.EntryText = this.PropertyName;
+            ctrl.EntryBg = this.PropertyBg;
+        }
+        await JSRuntime.InvokeVoidAsync("FormDesignerJs.setStyleFromProperty", this.PropertyName, this.PropertyBg);
     }
 }
