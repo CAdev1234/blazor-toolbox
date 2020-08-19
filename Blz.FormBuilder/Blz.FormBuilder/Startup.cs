@@ -31,7 +31,6 @@ namespace Blz.FormBuilder
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddScoped<AppData>();
             services.AddSingleton<IEditableControlProperty>();
         }
 

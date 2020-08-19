@@ -1,6 +1,6 @@
 ﻿@using Blz.FormBuilder.Controls
 @page "/formbuilder"
-@inject Services.AppData AppData
+@using Blz.FormBuilder.Services
 
 <h3>FormBuilder</h3>
 <div class="main-container" style="margin-top: 20px;">
@@ -52,33 +52,25 @@
     }
     public void CreateNewHeader()
     {
-        HeaderFormControl newHeaderControl = new HeaderFormControl("New Header Control", "default");
-        this._AllControls.Add(newHeaderControl);
+        if(AppData.g_dropActive)
+        {
+            HeaderFormControl newHeaderControl = new HeaderFormControl("New Header Control", "default");
+            Console.WriteLine("Jelly");
+            Console.WriteLine(AppData.g_dropIndex);
+            //this._AllControls.Add(newHeaderControl);
+            this._AllControls.Insert(AppData.g_dropIndex, newHeaderControl);
+            AppData.g_dropActive = false;
+        }
     }
     public void CreateNewTextEntry()
     {
-        TextEntryFormControl newTextEntryControl = new TextEntryFormControl("New TextEntry Control", "default");
-        this._AllControls.Add(newTextEntryControl);
-    }
-
-
-    protected override Task OnParametersSetAsync()
-    {
-        Console.WriteLine("OnParametersSetAsync method");
-        Console.WriteLine(this.ControlNameFromProperty);
-        return base.OnParametersSetAsync();
-    }
-    protected override void OnAfterRender(bool firstRender)
-    {
-        Console.WriteLine("OnAfterRender method");
-        Console.WriteLine(this.ControlNameFromProperty);
-        base.OnAfterRender(firstRender);
-    }
-    protected override bool ShouldRender()
-    {
-        Console.WriteLine("ShouldRender method");
-        Console.WriteLine(this.ControlNameFromProperty);
-        return base.ShouldRender();
+        if(AppData.g_dropActive)
+        {
+            TextEntryFormControl newTextEntryControl = new TextEntryFormControl("New TextEntry Control", "default");
+            //this._AllControls.Add(newTextEntryControl);
+            this._AllControls.Insert(AppData.g_dropIndex, newTextEntryControl);
+            AppData.g_dropActive = false;
+        }
     }
 
 }

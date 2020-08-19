@@ -1,8 +1,8 @@
 ﻿@inherits BaseEditorControl
 @inject IJSRuntime JSRuntime
 
-<div class="row control-div" style="cursor:move" draggable="true" @ondragstart="OnDragStart">
-    <label style="cursor:move" @onclick="@(e=>clickHeaderControl(HeaderText, HeaderInputBg))">@HeaderText</label>
+<div class="row control-div" style="cursor:move" draggable="true" @ondragstart="OnDragStart" @onclick="@(e=>clickHeaderControl(HeaderText, HeaderInputBg))">
+    <label style="cursor:move">@HeaderText</label>
     <input 
         class="HeaderControl"
         style="background-color:@HeaderInputBg; color: white;" 

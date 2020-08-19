@@ -34,16 +34,21 @@ FormDesignerJs.setControlProperty = (index) => {
 }
 
 FormDesignerJs.removeHighlightCss = (index) => {
-    console.log("hello world", index)
     for (var i = 0; i < $("input").length; i++) {
         var element = $("input")[i]
+        var parent_ele = $(element).parent();
         if (i === index) {
             $(element).addClass("HighlightInput");
+            $(parent_ele).addClass("HighlightBg");
             continue;
         }
         if ($(element).hasClass("HighlightInput")) {
             $(element).removeClass("HighlightInput");
         }
+        if ($(parent_ele).hasClass("HighlightBg")) {
+            $(parent_ele).removeClass("HighlightBg");
+        }
+        
     }
 }
 

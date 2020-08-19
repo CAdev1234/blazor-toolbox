@@ -2,8 +2,8 @@
 @inject IJSRuntime JSRuntime
 
 
-<div class="row control-div" style="cursor:move;" draggable="true" @ondragstart="OnDragStart">
-    <label style="cursor:move;" @onclick="@(()=>EntryControlClick(EntryText, EntryBg))">@EntryText</label>
+<div class="row control-div" style="cursor:move;" draggable="true" @ondragstart="OnDragStart"  @onclick="@(()=>EntryControlClick(EntryText, EntryBg))">
+    <label style="cursor:move;">@EntryText</label>
     <input 
         class="TextEntryControl @HighlightCss"
         style="background-color:@EntryBg; color: white;"  

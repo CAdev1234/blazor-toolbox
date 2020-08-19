@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blz.FormBuilder.Services;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,18 @@ namespace Blz.FormBuilder.Controls
         public void HandleDrop()
         {
             CSSClass = "";
+            Console.WriteLine("HandleDrop");
+            Console.WriteLine(this.Index);
+            AppData.g_dropIndex = this.Index;
+            AppData.g_dropActive = true;
+            Console.WriteLine(AppData.g_dropIndex);
             if (CurrentForm.CurrentDragIndex == -1) return;
             Console.WriteLine("Drop Index " + Index);
             Console.WriteLine("Drag Index " + CurrentForm.CurrentDragIndex);
 
             if (CurrentForm.CurrentDragIndex != Index && CurrentForm.CurrentDragIndex+1 != Index)
                 CurrentForm.MovingControl(Index);
+            
         }
 
         public bool IsDroppableArea_Above_EditorControl { get; set; }
@@ -39,6 +46,7 @@ namespace Blz.FormBuilder.Controls
         public void HandleDragEnter()
         {
             CSSClass = "dropzoneActive";
+            Console.WriteLine("dropzoneActive");
         }
         public void HandleDragLeave()
         {
