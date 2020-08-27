@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Hazard\\source\\repos\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
+      "projectUniqueName": "D:\\GIT\\blzFormBuilder\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
       "projectName": "Blz.FormBuilder",
-      "projectPath": "C:\\Users\\Hazard\\source\\repos\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
+      "projectPath": "D:\\GIT\\blzFormBuilder\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
       "packagesPath": "C:\\Users\\Hazard\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Hazard\\source\\repos\\Blz.FormBuilder\\Blz.FormBuilder\\obj\\",
+      "outputPath": "D:\\GIT\\blzFormBuilder\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"

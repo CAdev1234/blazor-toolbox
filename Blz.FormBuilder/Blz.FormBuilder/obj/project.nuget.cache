@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pYIyYpjPKY3I2EzMqm+39vPgyXIhbGkHkpv14iioQuQGhu3wj2RIdFz0o6cD2ZJTLd/D75mYYlyCrvaV4VpUBg==",
+  "dgSpecHash": "oqMdDS1dP76EryehYtRbH/hwqJBCM67ZiugcJS7mnyE5AjJ0qlRag6Z4bxyEewPmyR23ZPoJ67gzwRAe5flIxw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Hazard\\source\\repos\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
+  "projectFilePath": "D:\\GIT\\blzFormBuilder\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
