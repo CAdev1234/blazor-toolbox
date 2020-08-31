@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GIT\\blzFormBuilder\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj": {}
+    "D:\\GIT\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj": {}
   },
   "projects": {
-    "D:\\GIT\\blzFormBuilder\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj": {
+    "D:\\GIT\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GIT\\blzFormBuilder\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
+        "projectUniqueName": "D:\\GIT\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
         "projectName": "Blz.FormBuilder",
-        "projectPath": "D:\\GIT\\blzFormBuilder\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
+        "projectPath": "D:\\GIT\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\Blz.FormBuilder.csproj",
         "packagesPath": "C:\\Users\\Hazard\\.nuget\\packages\\",
-        "outputPath": "D:\\GIT\\blzFormBuilder\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\obj\\",
+        "outputPath": "D:\\GIT\\blazor-toolbox\\Blz.FormBuilder\\Blz.FormBuilder\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -41,6 +41,56 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.AspNetCore.Authentication.Facebook": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Google": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Twitter": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.AspNetCore.Blazor.HttpClient": {
+              "target": "Package",
+              "version": "[3.2.0-preview3.20168.3, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[3.1.4, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

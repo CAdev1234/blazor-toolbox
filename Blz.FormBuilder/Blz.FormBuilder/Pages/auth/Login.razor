@@ -1,8 +1,9 @@
 ﻿@layout LoginLayout
 @page "/"
 @using Blz.FormBuilder.Data
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NavigationManager NavigationManager
+
+@inject NavigationManager navigationManager
+@inject DAL DAL
 
 <div style="margin-top: 15vh;">
     <div class="container">
@@ -17,31 +18,35 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form>
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                            </div>
-                            <input type="text" class="form-control" placeholder="Email">
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Email" @bind-value="@userEmail">
 
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
                         </div>
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            </div>
-                            <input type="password" class="form-control" placeholder="Password">
+                        <input type="password" class="form-control" placeholder="Password" @bind-value="@userPassword" />
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
                         </div>
-                        <div class="row align-items-center remember">
-                            <input type="checkbox">Remember Me
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Sign In" class="btn float-right login_btn">
-                        </div>
-                    </form>
+                        <input type="password" class="form-control" placeholder="Salt" @bind-value="@userSalt"/>
+                    </div>
+                    <div class="row align-items-center remember">
+                        <input type="checkbox">Remember Me
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Sign In" class="btn float-right login_btn" @onclick="LoginSubmit" />
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-center links">
-                        Don't have an account?<a href="/register">Sign Up</a>
+                        Don't have an account?<a href="/register/">Sign Up</a>
                     </div>
                     <div class="d-flex justify-content-center links">
                         <a href="#">Forgot your password?</a>
@@ -131,5 +136,25 @@
         }
 </style>
 @code {
+    User loginUser = new User();
+    string userEmail { get; set; }
+    string userPassword { get; set; }
+    string userSalt { get; set; }
+
+    async Task LoginSubmit()
+    {
+        try
+        {
+            loginUser.UserEmail = userEmail;
+            loginUser.UserSaltPassword = userPassword;
+            loginUser.UserSalt = userSalt;
+            await DAL.SignUser(loginUser);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+    }
 
 }

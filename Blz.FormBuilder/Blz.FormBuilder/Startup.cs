@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Blz.FormBuilder.Data;
 using Blz.FormBuilder.Services;
 using Blz.FormBuilder.Controls;
+using Blz.FormBuilder.Context;
+using Microsoft.EntityFrameworkCore;
+using System.Net.Http;
 
 namespace Blz.FormBuilder
 {
@@ -31,7 +34,16 @@ namespace Blz.FormBuilder
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+
             services.AddSingleton<IEditableControlProperty>();
+
+            services.AddSingleton<HttpClient>();
+            services.AddSingleton<AppSettingsService>();
+            services.AddSingleton<DAL>();
+
+            services.AddHttpContextAccessor();
+
+            services.AddServerSideBlazor().AddCircuitOptions(o => o.DetailedErrors = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +69,7 @@ namespace Blz.FormBuilder
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+
             });
         }
     }
