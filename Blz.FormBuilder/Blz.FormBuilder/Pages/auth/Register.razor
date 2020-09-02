@@ -1,23 +1,37 @@
 ﻿@layout LoginLayout
 @page "/register"
 @using Blz.FormBuilder.Data
+@using Blz.FormBuilder.Services
 @using System.Security.Cryptography
 @using Microsoft.AspNetCore.Cryptography.KeyDerivation
+@using Newtonsoft.Json
 
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 @inject DAL DAL
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject IJSRuntime JsRuntime
+
 
 <div style="margin-top: 15vh;">
     <div class="container">
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
-                    <h3>Sign Up</h3>
+                    <h1>Sign Up</h1>
                     <div class="d-flex justify-content-end social_icon">
-                        <span><i class="fab fa-facebook-square" style="font-size:50px"></i></span>
-                        <span><i class="fab fa-google-plus-square" style="font-size:50px"></i></span>
-                        <span><i class="fab fa-twitter-square" style="font-size:50px"></i></span>
+                        <span>
+                            <i class="fab fa-facebook-square" style="font-size:50px"
+                               @onclick=@(async () => await RegisterWithFB())></i>
+                        </span>
+                        <span>
+                            <i class="fab fa-google-plus-square" style="font-size:50px"
+                               @onclick=@(async () => await RegisterWithGoogle())></i>
+                        </span>
+                        <span>
+                            <i class="fab fa-twitter-square" style="font-size:50px"
+                               @onclick=@(async () => await RegisterWithTwitter())></i>
+                        </span>
                     </div>
                 </div>
                 <div class="card-body">
@@ -52,11 +66,11 @@
                     <div class="form-group">
                         <input type="submit" value="Sign Up" class="btn signup_btn float-right" @onclick=@(async()=>await RegisterSubmit())>
                     </div>
-                    
+
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-center links">
-                        Already have an account?<a href="/">Sign In</a>
+                        Already have an account?<a href="/">Log In</a>
                     </div>
                 </div>
             </div>
@@ -89,9 +103,14 @@
             cursor: pointer;
         }
 
-    .card-header h3 {
-        color: white;
+    .card-header {
+        padding-bottom: 0px;
+        padding-top: 20px;
     }
+
+        .card-header h1 {
+            color: white;
+        }
 
     .social_icon {
         position: absolute;
@@ -155,48 +174,54 @@
 
     async Task RegisterSubmit()
     {
-        try
+        if (userPassword == confirmPassword)
         {
-
-            if(userPassword == confirmPassword)
+            registerUser.UserName = userName;
+            registerUser.UserEmail = userEmail;
+            salt = CreateSalt();
+            registerUser.UserSalt = Convert.ToBase64String(salt);
+            registerUser.UserSaltPassword = userPassword + registerUser.UserSalt;
+            registerUser.EmailLinkVerificationCode = "";
+            //registerUser.EmailLinkVerificationCodeValidUntil = DateTime.Now;
+            registerUser.IsRegisterationConfirmationEmailSent = false;
+            //registerUser.VerifiedAgainstEmailVerificationRecordId = "";
+            //registerUser.IsSuccessfulVerification = false;
+            //registerUser.LinkUrlAttemped = "";
+            //registerUser.IsNewPasswordCreated = false;
+            //registerUser.NewPasswordCreatedSalt = "";
+            userIpAddress = contextAccessor.HttpContext.Connection?.RemoteIpAddress.ToString();
+            registerUser.UserIpAddress = userIpAddress;
+            registerUser.UserCreateTime = DateTime.Now;
+            //registerUser.TokenValidTime = DateTime.Now;
+            //registerUser.LoginTypeId = 1;
+            registerUser.RegisterTypeId = 1;
+            registerUser.IsUserLoggedOnAtLeastOnce = false;
+            //registerUser.IsEmailAddressBeenVerifiedByUser = false;
+            //registerUser.IsSuccess = false;
+            //registerUser.IsError = false;
+            //registerUser.ErrorAnalysis = "";
+            //registerUser.ErrorDescription = "";
+            //Console.WriteLine(userIpAddress);
+            User created_user = new User();
+            created_user = await DAL.CreateUser(registerUser);
+            VarData.CURRENT_USER = created_user;
+            await SessionStorage.SetItemAsync("createdUser", created_user);
+            if (VarData.USER_ADDEDTO_TABLE)
             {
-                registerUser.UserName = userName;
-                registerUser.UserEmail = userEmail;
-                salt = CreateSalt();
-                registerUser.UserSalt = Convert.ToBase64String(salt);
-                registerUser.UserSaltPassword = CreateSaltedPassword(salt);
-                registerUser.EmailLinkVerificationCode = "";
-                //registerUser.EmailLinkVerificationCodeValidUntil = DateTime.Now;
-                registerUser.IsRegisterationConfirmationEmailSent = false;
-                //registerUser.VerifiedAgainstEmailVerificationRecordId = "";
-                //registerUser.IsSuccessfulVerification = false;
-                //registerUser.LinkUrlAttemped = "";
-                //registerUser.IsNewPasswordCreated = false;
-                //registerUser.NewPasswordCreatedSalt = "";
-                userIpAddress = contextAccessor.HttpContext.Connection?.RemoteIpAddress.ToString();
-                registerUser.UserIpAddress = userIpAddress;
-                registerUser.UserCreateTime = DateTime.Now;
-                //registerUser.TokenValidTime = DateTime.Now;
-                //registerUser.LoginTypeId = 1;
-                registerUser.RegisterTypeId = 1;
-                registerUser.IsUserLoggedOnAtLeastOnce = false;
-                //registerUser.IsEmailAddressBeenVerifiedByUser = false;
-                //registerUser.IsSuccess = false;
-                //registerUser.IsError = false;
-                //registerUser.ErrorAnalysis = "";
-                //registerUser.ErrorDescription = "";
-                //Console.WriteLine(userIpAddress);
-                await DAL.CreateUser(registerUser);
+                // Send verification email
+                MailService mailService = new MailService();
+                mailService.SendMailWithSMTP(created_user.UserEmail, created_user.EmailLinkVerificationCode);
                 NavigationManager.NavigateTo("/email/verification");
             }
             else
             {
-                return;
+                bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Your email exist.");
             }
+
         }
-        catch(Exception ex)
+        else
         {
-            Console.WriteLine(ex.Message);
+            return;
         }
 
 
@@ -218,8 +243,20 @@
             salt: salt,
             prf: KeyDerivationPrf.HMACSHA1,
             iterationCount: 10000,
-            numBytesRequested: 256/8)
+            numBytesRequested: 256 / 8)
         );
         return hashed;
+    }
+    async Task RegisterWithFB()
+    {
+
+    }
+    async Task RegisterWithGoogle()
+    {
+
+    }
+    async Task RegisterWithTwitter()
+    {
+
     }
 }

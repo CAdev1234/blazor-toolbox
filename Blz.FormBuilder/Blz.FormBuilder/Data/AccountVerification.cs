@@ -12,6 +12,7 @@ namespace Blz.FormBuilder.Data
     {
         [Key]
         public int AVId { get; set; }
+        public DateTime AVTime { get; set; }
         public string AVIpAddress { get; set; }
         public int AVUserId { get; set; }
         public int AVVerifiedAgainstEmailVerificationRecordId { get; set; }

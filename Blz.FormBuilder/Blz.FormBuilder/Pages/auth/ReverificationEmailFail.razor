@@ -1,0 +1,23 @@
+﻿@page "/email/verification/error"
+@layout EmailVerifyLayout
+
+@using Blz.FormBuilder.Data
+
+@inject NavigationManager NavigationManager
+
+<div class="email-verify-error">
+    <h2>Email Verification Error!</h2><br />
+    <div style="font-size:20px;">
+        Please check verification link again.<br /><a href="/">login</a> again.
+    </div>
+</div>
+<style>
+    .email-verify-error {
+        padding: 30px;
+        background: ghostwhite;
+    }
+</style>
+
+@code {
+    
+}

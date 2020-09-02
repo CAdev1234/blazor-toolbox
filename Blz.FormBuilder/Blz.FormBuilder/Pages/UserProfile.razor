@@ -1,0 +1,32 @@
+﻿@page "/user/profile"
+@layout EmailVerifyLayout
+
+@using Blz.FormBuilder.Data
+
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+
+<div class="user-profile">
+    <h2>@currentUser.UserName</h2><br />
+    <h3>Your account created successfully.</h3>
+    <div style="font-size:20px;">
+        We sent you email for verification. Please check it and visit homepage with email link.<br />
+        If you didn't receive verification email, please go <a href="/email/reverification">resend</a> verification email page.
+    </div>
+</div>
+<style>
+    .user-profile {
+        padding: 30px;
+        background: ghostwhite;
+    }
+</style>
+
+@code {
+    public User currentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUser = new User();
+        currentUser = await SessionStorage.GetItemAsync<User>("createdUser");
+    }
+
+}

@@ -15,6 +15,10 @@ using Blz.FormBuilder.Controls;
 using Blz.FormBuilder.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Components.Authorization;
+using Blazored.SessionStorage;
 
 namespace Blz.FormBuilder
 {
@@ -44,6 +48,27 @@ namespace Blz.FormBuilder
             services.AddHttpContextAccessor();
 
             services.AddServerSideBlazor().AddCircuitOptions(o => o.DetailedErrors = true);
+
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddBlazoredSessionStorage();
+
+            // Google auth service added
+            //services.AddAuthentication().AddGoogle(googleOptions =>
+            //{
+                //googleOptions.ClientId = "Authentication:Google:ClientId";
+                ///googleOptions.ClientSecret = "Authentication:Google:ClientSecret";
+            //});
+            // Facebook auth service added
+            //services.AddAuthentication().AddFacebook(facebookOptions =>
+            //{
+                //facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                //facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+
+                //facebookOptions.Events = new Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents()
+                //{
+                    //OnRemoteFailure = LoginFail
+                //};
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +89,9 @@ namespace Blz.FormBuilder
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

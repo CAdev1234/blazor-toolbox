@@ -1,17 +1,59 @@
 ﻿@page "/email/verification"
+@page "/verification/activation_code/{activation_code}"
 @layout EmailVerifyLayout
+
+@using Blz.FormBuilder.Data
+
+@inject NavigationManager NavigationManager
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject DAL DAL
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <div class="email-verify">
-    <h3>Thank you for verifying your email.<a href="/" style=""> Go to login</a></h3>
-    
+    <h2>Congratulation!</h2><br />
+    <h3>Your account created successfully.</h3>
+    <div style="font-size:20px;">
+        We sent you email for verification. Please check it and visit homepage with email link.<br />
+        If you didn't receive verification email, please go <a href="/email/reverification">resend</a> verification email page.
+    </div>
 </div>
 <style>
     .email-verify {
         padding: 30px;
-        height: 100px;
         background: ghostwhite;
     }
 </style>
 
 @code {
+    [Parameter]
+    public string activation_code { get; set; }
+    string pageUrl { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        pageUrl = NavigationManager.Uri;
+        Console.WriteLine("pageUrl=" + pageUrl);
 
+
+        if (pageUrl.Contains("/email/verification"))
+        {
+            Console.WriteLine("Your email is not verified yet");
+        }
+        if (pageUrl.Contains("/verification/activation_code"))
+        {
+            Console.WriteLine("Your email verification success");
+            int int_var = pageUrl.IndexOf("activation_code/") + 16;
+            activation_code = pageUrl.Substring(int_var);
+            await DAL.CheckActivationCode(pageUrl);
+            if (VarData.VERIFICATOIN_SUCCESS)
+            {
+                ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(VarData.CURRENT_USER.UserEmail);
+                await SessionStorage.SetItemAsync("UserEmail", VarData.CURRENT_USER.UserEmail);
+                NavigationManager.NavigateTo("/home");
+            }
+            if (!VarData.VERIFICATOIN_SUCCESS)
+            {
+                NavigationManager.NavigateTo("/email/verification/error");
+            }
+        }
+    }
 }

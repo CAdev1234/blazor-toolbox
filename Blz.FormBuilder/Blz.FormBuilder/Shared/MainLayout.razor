@@ -1,11 +1,24 @@
 ﻿@inherits LayoutComponentBase
 
+@using Blz.FormBuilder.Data
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <div class="sidebar">
     <NavMenu />
 </div>
 
 <div class="main">
     <div class="top-row px-4">
+        <AuthorizeView>
+            <Authorized>
+                <a href="/user/profile">Hello, @context.User.Identity.Name</a>
+                <a href="/" @onclick="(() => Logout())">Sign out</a>
+            </Authorized>
+            <NotAuthorized>
+                <a href="/">Sign In</a>
+            </NotAuthorized>
+        </AuthorizeView>
         <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
     </div>
 
@@ -13,3 +26,11 @@
         @Body
     </div>
 </div>
+
+@code{
+
+    public void Logout()
+    {
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+    }
+}

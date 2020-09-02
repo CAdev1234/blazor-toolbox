@@ -18,6 +18,7 @@ namespace Blz.FormBuilder.Data
         public DateTime VEEmailLinkVerificationCodeValidUntil { get; set; }
         public bool IsNewPasswordCreated { get; set; }
         public string NewPasswordCreatedSALT { get; set; }
+        public int VEUserId { get; set; }
 
     }
 }

@@ -2,15 +2,18 @@
 @page "/"
 @using Blz.FormBuilder.Data
 
-@inject NavigationManager navigationManager
+@inject NavigationManager NavigationManager
 @inject DAL DAL
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+
 
 <div style="margin-top: 15vh;">
     <div class="container">
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
-                    <h3>Sign In</h3>
+                    <h1>Log In</h1>
                     <div class="d-flex justify-content-end social_icon">
                         <span><i class="fab fa-facebook-square" style="font-size:50px"></i></span>
                         <span><i class="fab fa-google-plus-square" style="font-size:50px"></i></span>
@@ -31,25 +34,16 @@
                         </div>
                         <input type="password" class="form-control" placeholder="Password" @bind-value="@userPassword" />
                     </div>
-                    <div class="input-group form-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-key"></i></span>
-                        </div>
-                        <input type="password" class="form-control" placeholder="Salt" @bind-value="@userSalt"/>
-                    </div>
                     <div class="row align-items-center remember">
                         <input type="checkbox">Remember Me
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Sign In" class="btn float-right login_btn" @onclick="LoginSubmit" />
+                        <input type="submit" value="Log In" class="btn float-right login_btn" @onclick="LoginSubmit" />
                     </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-center links">
                         Don't have an account?<a href="/register/">Sign Up</a>
-                    </div>
-                    <div class="d-flex justify-content-center links">
-                        <a href="#">Forgot your password?</a>
                     </div>
                 </div>
             </div>
@@ -81,8 +75,11 @@
             color: white;
             cursor: pointer;
         }
-
-    .card-header h3 {
+    .card-header {
+        padding-bottom: 0px;
+        padding-top: 20px;
+    }
+    .card-header h1 {
         color: white;
     }
 
@@ -139,22 +136,19 @@
     User loginUser = new User();
     string userEmail { get; set; }
     string userPassword { get; set; }
-    string userSalt { get; set; }
 
     async Task LoginSubmit()
     {
-        try
+        loginUser.UserEmail = userEmail;
+        loginUser.UserSaltPassword = userPassword;
+        loginUser = await DAL.LoginUser(loginUser);
+        if(VarData.GOTO_URL == "/home")
         {
-            loginUser.UserEmail = userEmail;
-            loginUser.UserSaltPassword = userPassword;
-            loginUser.UserSalt = userSalt;
-            await DAL.SignUser(loginUser);
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(userEmail);
+            await SessionStorage.SetItemAsync("createdUser", userEmail);
+            return;
         }
-        catch(Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-
+        NavigationManager.NavigateTo(VarData.GOTO_URL);
+        VarData.GOTO_URL = "";
     }
-
 }

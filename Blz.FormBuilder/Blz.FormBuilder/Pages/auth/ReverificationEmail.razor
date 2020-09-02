@@ -1,0 +1,44 @@
+﻿@page "/email/reverification"
+@layout EmailVerifyLayout
+
+@using Blz.FormBuilder.Data
+@using Blz.FormBuilder.Services
+
+@inject DAL DAL
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+
+<div class="email-reverify">
+    <h2>Email Verification Failed!</h2>
+    <div style="font-size:20px;">If you don't check verification email, please<button class="resend-email" @onclick=@(async ()=> await ReSendVerificationEmail())>resend</button>verification email. Thanks.</div>
+</div>
+<style>
+    .email-reverify {
+        padding: 30px;
+        background: ghostwhite;
+    }
+    .resend-email {
+        border: none;
+        background-color: transparent;
+        color: #0366d6;
+    }
+
+    .resend-email:focus {
+        outline: none;
+    }
+
+    .resend-email:hover {
+        text-decoration: underline;
+    }
+</style>
+
+@code {
+    async Task ReSendVerificationEmail()
+    {
+        User registerUser = await SessionStorage.GetItemAsync<User>("createdUser");
+
+        User reverification_user = await DAL.ResendEmail(registerUser);
+        // Send verification mail again
+        MailService mailService = new MailService();
+        mailService.SendMailWithSMTP(reverification_user.UserEmail, reverification_user.EmailLinkVerificationCode);
+    }
+}
