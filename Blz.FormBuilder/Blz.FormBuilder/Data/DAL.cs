@@ -62,36 +62,16 @@ namespace Blz.FormBuilder.Data
         {
             Console.WriteLine(user.UserSaltPassword);
             User result = await _context.Users.FirstOrDefaultAsync(record => record.UserEmail == user.UserEmail);
-            Console.WriteLine("ddd");
+            Console.WriteLine(result.IsUserLoggedOnAtLeastOnce);
             // Section::Account SignIn Process
             if (!result.IsUserLoggedOnAtLeastOnce)
             {
-                if (result.UserSaltPassword.Contains(user.UserSaltPassword))
-                {
-                        
-                    if (result.IsEmailAddressBeenVerifiedByUser)
-                    {
-                            
-                        result.IsUserLoggedOnAtLeastOnce = true;
-                        Console.WriteLine("ddd");
-                        //_context.Entry(result).State = EntityState.Modified;
-                        VarData.GOTO_URL = "/home";
-                    }
-                    else
-                    {
-                        // Go to start of Section::Send Reverification Email To User To Confirm Account
-                        Console.WriteLine("Go to start of section::send reverification email to user to confirm account");
-                        VarData.GOTO_URL = "/email/reverification";
-                    }
-                }
-                if (!result.UserSaltPassword.Contains(user.UserSaltPassword))
-                {
-                    Console.WriteLine("Login failed");
-                    // We will store a record in ‘LoginsAudit’
-                    SaveLoginAudit(1, true, false, 1, "");
-                    // Display ErrorAnalysis to the user, and allow them to try again.
-                    VarData.GOTO_URL = "/login/fail";
-                }
+                Console.WriteLine("Login failed");
+                // We will store a record in ‘LoginsAudit’
+                SaveLoginAudit(1, true, false, 1, "");
+                // Display ErrorAnalysis to the user, and allow them to try again.
+                VarData.GOTO_URL = "/login/fail";
+                return result;
             }
             if (result.IsUserLoggedOnAtLeastOnce)
             {
@@ -104,18 +84,21 @@ namespace Blz.FormBuilder.Data
                         SaveLoginAudit(1, true, false, 1, "");
                         // Navigate to the homepage
                         VarData.GOTO_URL = "/home";
+                        return result;
                     }
                     if (!result.UserSaltPassword.Contains(user.UserSaltPassword))
                     {
                         SaveLoginAudit(1, false, true, 1, "");
                         //Display ErrorAnalysis and go to login
                         VarData.GOTO_URL = "/login/fail";
+                        return result;
                     }
                 }
                 if (!result.IsEmailAddressBeenVerifiedByUser)
                 {
                     // SECTION::Send Reverification Email To User To Confirm Account
                     VarData.GOTO_URL = "/email/reverification";
+                    return result;
                 }
             }
             return result;

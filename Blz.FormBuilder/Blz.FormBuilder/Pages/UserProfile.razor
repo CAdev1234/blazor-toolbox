@@ -4,29 +4,153 @@
 @using Blz.FormBuilder.Data
 
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="user-profile">
-    <h2>@currentUser.UserName</h2><br />
-    <h3>Your account created successfully.</h3>
-    <div style="font-size:20px;">
-        We sent you email for verification. Please check it and visit homepage with email link.<br />
-        If you didn't receive verification email, please go <a href="/email/reverification">resend</a> verification email page.
+    <div class="row">
+        <div class="col-4">
+            <h1>@currentUser.UserName</h1>
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4" style="text-align: right">
+            <button class="btn btn-secondary" 
+                    style="width:150px;height:40px;"
+                    @onclick="@(() => GoToHome())">Go to Home</button>
+        </div>
+    </div><br />
+    <div class="row">
+        <label class="" col-form-label">Email:</label>
+        <input type="text" class="form-control" @bind-value="@currentUser.UserEmail" disabled />
+    </div>
+    <br />
+    <div class="row">
+        <label class="" col-form-label">RegisterType:</label>
+        <input type="text" class="form-control" @bind-value="@registerType" disabled />
+    </div>
+    <hr style="width: 100%" />
+    <div class="row">
+        <div>You can login again using following buttons</div>
+    </div><br />
+    <div class="row">
+        <div class="d-flex justify-content-start social_icon">
+            <button type="button" class="btn btn-secondary" @onclick="(() => GoToUserLogin())">
+                <i class="fas fa-envelope-open"></i>
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="(() => GoToFBLogin())">
+                <i class="fab fa-facebook-f"></i>
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="@(()=> GoToGoogleLogin())">
+                <i class="fab fa-google"></i>
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="@(()=> GoToTwitterLogin())">
+                <i class="fab fa-twitter"></i>
+            </button>
+        </div>
+    </div>
+    <hr style="width: 100%" />
+    <div class="row">
+        <div>You can change password using following button</div>
+    </div><br />
+    <div class="row">
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#changePasswordModal">Change password</button>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">@currentUser.UserEmail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="col-form-label">New Password:</label>
+                            <input type="password" class="form-control" id="new-password" @bind-value="@newPassword">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">Confirm Password:</label>
+                            <input type="password" class="form-control" id="confirm-password" @bind-value="@confirmPassword">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" @onclick="@(()=>ChangePassword())">Change Password</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <style>
     .user-profile {
-        padding: 30px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-left: 30%;
+        padding-right: 30%;
         background: ghostwhite;
+    }
+    .social_icon button {
+        margin-left: 5px;
+        margin-right: 5px;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .social_icon button i {
+        font-size: 30px;
     }
 </style>
 
 @code {
     public User currentUser;
+    public string registerType { get; set; }
+    public string newPassword { get; set; }
+    public string confirmPassword { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         currentUser = new User();
         currentUser = await SessionStorage.GetItemAsync<User>("createdUser");
+        if (currentUser.RegisterTypeId == 1)
+        {
+            registerType = "Register with User Email";
+        }
     }
 
+    public async Task ChangePassword()
+    {
+        if (newPassword == confirmPassword)
+        {
+            Console.WriteLine("change password modal");
+            await JSRuntime.InvokeVoidAsync("CloseChangePasswordModal");
+        }
+
+    }
+    public void GoToHome()
+    {
+        navigationManager.NavigateTo("/home");
+    }
+    public void GoToUserLogin()
+    {
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+    }
+    public void GoToFBLogin()
+    {
+
+    }
+    public void GoToGoogleLogin()
+    {
+
+    }
+    public void GoToTwitterLogin()
+    {
+
+    }
 }

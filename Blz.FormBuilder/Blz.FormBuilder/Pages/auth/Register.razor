@@ -20,18 +20,18 @@
                 <div class="card-header">
                     <h1>Sign Up</h1>
                     <div class="d-flex justify-content-end social_icon">
-                        <span>
-                            <i class="fab fa-facebook-square" style="font-size:50px"
+                        <button type="button" class="btn">
+                            <i class="fab fa-facebook-f"
                                @onclick=@(async () => await RegisterWithFB())></i>
-                        </span>
-                        <span>
-                            <i class="fab fa-google-plus-square" style="font-size:50px"
+                        </button>
+                        <button type="button" class="btn">
+                            <i class="fab fa-google"
                                @onclick=@(async () => await RegisterWithGoogle())></i>
-                        </span>
-                        <span>
-                            <i class="fab fa-twitter-square" style="font-size:50px"
+                        </button>
+                        <button type="button" class="btn">
+                            <i class="fab fa-twitter"
                                @onclick=@(async () => await RegisterWithTwitter())></i>
-                        </span>
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -92,14 +92,23 @@
         background-color: rgba(0,0,0,0.5) !important;
     }
 
-    .social_icon span {
-        font-size: 60px;
-        margin-left: 10px;
-        color: #FFC312;
+    .social_icon button {
+        background-color: #FFC312;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 5px;
+        margin-left: 5px;
     }
 
-        .social_icon span:hover {
-            color: white;
+        .social_icon button i {
+            font-size: 35px;
+        }
+
+        .social_icon button:hover {
+            background-color: white;
             cursor: pointer;
         }
 
@@ -114,8 +123,8 @@
 
     .social_icon {
         position: absolute;
-        right: 20px;
-        top: -45px;
+        right: 10px;
+        top: -15px;
     }
 
     .input-group-prepend span {
@@ -145,6 +154,7 @@
         color: black;
         background-color: #FFC312;
         width: 100px;
+        font-weight: bold;
     }
 
         .signup_btn:hover {
