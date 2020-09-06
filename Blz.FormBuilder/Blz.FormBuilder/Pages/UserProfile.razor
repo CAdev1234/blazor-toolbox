@@ -2,22 +2,27 @@
 @layout EmailVerifyLayout
 
 @using Blz.FormBuilder.Data
+@using Blz.FormBuilder.Services
+@using System.Security.Cryptography
 
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 @inject IJSRuntime JSRuntime
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject DAL DAL
 
 <div class="user-profile">
     <div class="row">
         <div class="col-4">
-            <h1>@currentUser.UserName</h1>
+            <div style="font-size:50px; font-weight:bold">@currentUser.UserName</div>
         </div>
         <div class="col-4"></div>
-        <div class="col-4" style="text-align: right">
-            <button class="btn btn-secondary" 
+        <div class="col-4" style="text-align: right; padding-top:10px">
+            <button class="btn btn-secondary"
                     style="width:150px;height:40px;"
-                    @onclick="@(() => GoToHome())">Go to Home</button>
+                    @onclick="@(() => GoToHome())">
+                Go to Home
+            </button>
         </div>
     </div><br />
     <div class="row">
@@ -94,6 +99,7 @@
         padding-right: 30%;
         background: ghostwhite;
     }
+
     .social_icon button {
         margin-left: 5px;
         margin-right: 5px;
@@ -103,9 +109,10 @@
         justify-content: center;
         align-items: center;
     }
-    .social_icon button i {
-        font-size: 30px;
-    }
+
+        .social_icon button i {
+            font-size: 30px;
+        }
 </style>
 
 @code {
@@ -129,9 +136,26 @@
         if (newPassword == confirmPassword)
         {
             Console.WriteLine("change password modal");
-            await JSRuntime.InvokeVoidAsync("CloseChangePasswordModal");
+            User user = new User();
+            user.UserSalt = CreateSalt();
+            user.UserSaltPassword = newPassword + user.UserSalt;
+            user.UserEmail = currentUser.UserEmail;
+            await DAL.ChangePassword(user);
+            // Send changed password to user by email
+            MailService mailService = new MailService();
+            mailService.SendMailWithSMTP(user.UserEmail, "Changed Password", newPassword);
         }
+        await JSRuntime.InvokeVoidAsync("CloseChangePasswordModal");
 
+    }
+    public string CreateSalt()
+    {
+        byte[] salt = new byte[128 / 8];
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(salt);
+        }
+        return Convert.ToBase64String(salt);
     }
     public void GoToHome()
     {
@@ -140,6 +164,7 @@
     public void GoToUserLogin()
     {
         ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+        navigationManager.NavigateTo("/");
     }
     public void GoToFBLogin()
     {

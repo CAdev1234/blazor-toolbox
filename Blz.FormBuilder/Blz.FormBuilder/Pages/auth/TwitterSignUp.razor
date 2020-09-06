@@ -1,10 +1,14 @@
 ﻿@layout LoginLayout
-@page "/"
+@page "/register/twitter"
 @using Blz.FormBuilder.Data
+@using Blz.FormBuilder.Services
+@using System.Security.Cryptography
+@using Microsoft.AspNetCore.Cryptography.KeyDerivation
+@using Newtonsoft.Json
 
 @inject NavigationManager NavigationManager
+@inject HttpClient Http
 @inject DAL DAL
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 @inject IJSRuntime JsRuntime
 
@@ -14,36 +18,38 @@
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
-                    <h1>Log In</h1>
-                    <div class="d-flex justify-content-end social_icon">
-                        <button type="button" class="btn"><i class="fab fa-facebook-f"></i></button>
-                        <button type="button" class="btn"><i class="fab fa-google"></i></button>
-                        <button type="button" class="btn"><i class="fab fa-twitter"></i></button>
-                    </div>
+                    <h1>Sign Up</h1><span class="twitter-mark"><i class="fab fa-twitter"></i></span>
                 </div>
                 <div class="card-body">
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Email" @bind-value="@userEmail">
+                        <input type="text" class="form-control" placeholder="Username" @bind-value="@userName">
                     </div>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-key"></i></span>
                         </div>
-                        <input type="password" class="form-control" placeholder="Password" @bind-value="@userPassword" />
+                        <input type="password" class="form-control" placeholder="Password" @bind-value="@userPassword">
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input type="password" class="form-control" placeholder="Confirm Password" @bind-value="@confirmPassword">
                     </div>
                     <div class="row align-items-center remember">
                         <input type="checkbox">Remember Me
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Log In" class="btn login_btn" @onclick="LoginSubmit" />
+                        <input type="submit" value="Finalize Twitter Account" class="btn signup_btn" @onclick=@(async()=>await FinalizetwitterAccount())>
                     </div>
+
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-center links">
-                        Don't have an account?<a href="/register/">Sign Up</a>
+                        Already have an account?<a href="/">Log In</a>
                     </div>
                 </div>
             </div>
@@ -65,37 +71,35 @@
         background-color: rgba(0,0,0,0.5) !important;
     }
 
-    .social_icon button {
-        background-color: #FFC312;
-        width: 45px;
-        height: 45px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-right: 5px;
-        margin-left: 5px;
-    }
-    .social_icon button i {
-        font-size: 35px;
-    }
-
-        .social_icon button:hover {
-            background-color: white;
-            cursor: pointer;
-        }
     .card-header {
         padding-bottom: 0px;
         padding-top: 20px;
-    }
-    .card-header h1 {
-        color: white;
+        display: flex;
     }
 
-    .social_icon {
+        .card-header h1 {
+            color: white;
+        }
+
+    .twitter-mark {
+        height: 50px;
         position: absolute;
         right: 10px;
-        top: -15px;
+        top: 10px;
     }
+
+        .twitter-mark i {
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            font-size: 35px;
+            color: black;
+            background-color: #FFC312;
+            width: 45px;
+            height: 45px;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
 
     .input-group-prepend span {
         width: 40px;
@@ -121,7 +125,7 @@
             margin-right: 5px;
         }
 
-    .login_btn {
+    .signup_btn {
         color: black;
         background-color: #FFC312;
         width: 100%;
@@ -129,7 +133,7 @@
         margin-top: 20px;
     }
 
-        .login_btn:hover {
+        .signup_btn:hover {
             color: black;
             background-color: white;
         }
@@ -142,34 +146,18 @@
             margin-left: 4px;
             color: #FFC312;
         }
+
     .card-footer {
         margin-top: -20px;
     }
 </style>
 @code {
-    User loginUser = new User();
-    string userEmail { get; set; }
-    string userPassword { get; set; }
+    public string userName { get; set; }
+    public string userPassword { get; set; }
+    public string confirmPassword { get; set; }
 
-    async Task LoginSubmit()
+    public async Task FinalizetwitterAccount()
     {
-        if (userEmail == "" || userEmail == null || userPassword == null || userPassword == "")
-        {
-            bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Please fill all inputs.");
-            return;
-        }
-        loginUser.UserEmail = userEmail;
-        loginUser.UserSaltPassword = userPassword;
-        loginUser = await DAL.LoginUser(loginUser);
-        if(VarData.GOTO_URL == "/home")
-        {
-            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(userEmail);
-            await SessionStorage.SetItemAsync("userEmail", userEmail);
-            await SessionStorage.SetItemAsync("createdUser", loginUser);
-            NavigationManager.NavigateTo(VarData.GOTO_URL);
-            return;
-        }
-        NavigationManager.NavigateTo(VarData.GOTO_URL);
-        VarData.GOTO_URL = "";
+
     }
 }

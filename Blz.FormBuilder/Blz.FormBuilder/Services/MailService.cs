@@ -12,7 +12,7 @@ namespace Blz.FormBuilder.Services
     {
         readonly string sender = "wangliewang311@gmail.com";
         readonly string gmail_password = "Mynameisfenglong4233";
-        public void SendMailWithSMTP(string receiver, string emailLink)
+        public void SendMailWithSMTP(string receiver, string subject, string emailLink)
         {
             Console.WriteLine("receiver=" + receiver);
             Console.WriteLine("emailLink=" + emailLink);
@@ -21,7 +21,7 @@ namespace Blz.FormBuilder.Services
                 using MailMessage mail = new MailMessage();
                 mail.From = new MailAddress(sender);
                 mail.To.Add(receiver);
-                mail.Subject = "Verification Email";
+                mail.Subject = subject;
                 mail.Body = $"<h1>{emailLink}</h1>";
                 mail.IsBodyHtml = true;
 

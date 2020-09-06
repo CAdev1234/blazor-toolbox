@@ -48,6 +48,7 @@
             {
                 ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(VarData.CURRENT_USER.UserEmail);
                 await SessionStorage.SetItemAsync("UserEmail", VarData.CURRENT_USER.UserEmail);
+                await SessionStorage.SetItemAsync("createdUser", VarData.CURRENT_USER);
                 NavigationManager.NavigateTo("/home");
             }
             if (!VarData.VERIFICATOIN_SUCCESS)

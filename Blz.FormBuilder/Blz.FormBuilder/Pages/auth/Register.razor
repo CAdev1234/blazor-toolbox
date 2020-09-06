@@ -1,5 +1,6 @@
 ﻿@layout LoginLayout
 @page "/register"
+
 @using Blz.FormBuilder.Data
 @using Blz.FormBuilder.Services
 @using System.Security.Cryptography
@@ -64,7 +65,7 @@
                         <input type="checkbox">Remember Me
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Sign Up" class="btn signup_btn float-right" @onclick=@(async()=>await RegisterSubmit())>
+                        <input type="submit" value="Sign Up" class="btn signup_btn" @onclick=@(async()=>await RegisterSubmit())>
                     </div>
 
                 </div>
@@ -128,7 +129,7 @@
     }
 
     .input-group-prepend span {
-        width: 50px;
+        width: 40px;
         background-color: #FFC312;
         color: black;
         border: 0 !important;
@@ -141,6 +142,7 @@
 
     .remember {
         color: white;
+        margin-top: 30px;
     }
 
         .remember input {
@@ -153,8 +155,9 @@
     .signup_btn {
         color: black;
         background-color: #FFC312;
-        width: 100px;
+        width: 100%;
         font-weight: bold;
+        margin-top: 20px;
     }
 
         .signup_btn:hover {
@@ -170,6 +173,9 @@
             margin-left: 4px;
             color: #FFC312;
         }
+    .card-footer {
+        margin-top: -20px;
+    }
 </style>
 @code {
     User registerUser = new User();
@@ -180,10 +186,14 @@
     string userIpAddress { get; set; }
     byte[] salt { get; set; }
 
-    Microsoft.AspNetCore.Http.HttpContextAccessor contextAccessor = new Microsoft.AspNetCore.Http.HttpContextAccessor();
 
     async Task RegisterSubmit()
     {
+        if (userName == null || userName == "" || userEmail == "" || userEmail == null || userPassword == "" || userPassword == null)
+        {
+            bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Please fill all inputs.");
+            return;
+        }
         if (userPassword == confirmPassword)
         {
             registerUser.UserName = userName;
@@ -191,27 +201,7 @@
             salt = CreateSalt();
             registerUser.UserSalt = Convert.ToBase64String(salt);
             registerUser.UserSaltPassword = userPassword + registerUser.UserSalt;
-            registerUser.EmailLinkVerificationCode = "";
-            //registerUser.EmailLinkVerificationCodeValidUntil = DateTime.Now;
-            registerUser.IsRegisterationConfirmationEmailSent = false;
-            //registerUser.VerifiedAgainstEmailVerificationRecordId = "";
-            //registerUser.IsSuccessfulVerification = false;
-            //registerUser.LinkUrlAttemped = "";
-            //registerUser.IsNewPasswordCreated = false;
-            //registerUser.NewPasswordCreatedSalt = "";
-            userIpAddress = contextAccessor.HttpContext.Connection?.RemoteIpAddress.ToString();
-            registerUser.UserIpAddress = userIpAddress;
-            registerUser.UserCreateTime = DateTime.Now;
-            //registerUser.TokenValidTime = DateTime.Now;
-            //registerUser.LoginTypeId = 1;
             registerUser.RegisterTypeId = 1;
-            registerUser.IsUserLoggedOnAtLeastOnce = false;
-            //registerUser.IsEmailAddressBeenVerifiedByUser = false;
-            //registerUser.IsSuccess = false;
-            //registerUser.IsError = false;
-            //registerUser.ErrorAnalysis = "";
-            //registerUser.ErrorDescription = "";
-            //Console.WriteLine(userIpAddress);
             User created_user = new User();
             created_user = await DAL.CreateUser(registerUser);
             VarData.CURRENT_USER = created_user;
@@ -220,7 +210,7 @@
             {
                 // Send verification email
                 MailService mailService = new MailService();
-                mailService.SendMailWithSMTP(created_user.UserEmail, created_user.EmailLinkVerificationCode);
+                mailService.SendMailWithSMTP(created_user.UserEmail, "Verification Email", created_user.EmailLinkVerificationCode);
                 NavigationManager.NavigateTo("/email/verification");
             }
             else
@@ -231,7 +221,7 @@
         }
         else
         {
-            return;
+            bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Please check confirm password.");
         }
 
 
@@ -259,14 +249,14 @@
     }
     async Task RegisterWithFB()
     {
-
+        NavigationManager.NavigateTo("/register/facebook");
     }
     async Task RegisterWithGoogle()
     {
-
+        NavigationManager.NavigateTo("/register/google");
     }
     async Task RegisterWithTwitter()
     {
-
+        NavigationManager.NavigateTo("/register/twitter");
     }
 }

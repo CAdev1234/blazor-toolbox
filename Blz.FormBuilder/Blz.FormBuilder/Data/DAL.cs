@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Blazored.SessionStorage;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.VisualBasic;
+using System.Data.Common;
 
 namespace Blz.FormBuilder.Data
 {
@@ -45,9 +46,13 @@ namespace Blz.FormBuilder.Data
             User result = await _context.Users.FirstOrDefaultAsync(record => record.UserEmail == user.UserEmail);
             if(result == null)
             {
+                VarData.USER_ADDEDTO_TABLE = false;
                 string activation_code = CreateEmailActivationCode(activationCodeLength);
                 user.EmailLinkVerificationCode = verifyLinkUrl + activation_code;
                 user.EmailLinkVerificationCodeValidUntil = DateTime.UtcNow.AddDays(1);
+                ContextAccessor = new HttpContextAccessor();
+                user.UserIpAddress= ContextAccessor.HttpContext.Connection?.RemoteIpAddress.ToString();
+                user.UserCreateTime = DateTime.UtcNow;
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
                 VarData.USER_ADDEDTO_TABLE = true;
@@ -60,9 +65,12 @@ namespace Blz.FormBuilder.Data
         }
         public async Task<User> LoginUser([FromBody] User user)
         {
-            Console.WriteLine(user.UserSaltPassword);
-            User result = await _context.Users.FirstOrDefaultAsync(record => record.UserEmail == user.UserEmail);
-            Console.WriteLine(result.IsUserLoggedOnAtLeastOnce);
+            User result = await _context.Users.FirstOrDefaultAsync(record => record.UserEmail == user.UserEmail && record.UserSaltPassword.Contains(user.UserSaltPassword));
+            if (result == null)
+            {
+                VarData.GOTO_URL = "/login/fail";
+                return result;
+            }
             // Section::Account SignIn Process
             if (!result.IsUserLoggedOnAtLeastOnce)
             {
@@ -217,6 +225,17 @@ namespace Blz.FormBuilder.Data
             accountVerification.AVLinkUrlAttempted = linkUrlAttempted;
             accountVerification.AVErrorDescription = errorDescription;
             _context.AccountVerifications.Add(accountVerification);
+            await _context.SaveChangesAsync();
+        }
+        public async Task ChangePassword(User user)
+        {
+            Console.WriteLine("changed password");
+            Console.WriteLine(user.UserSalt);
+            Console.WriteLine(user.UserSaltPassword);
+            var result = await _context.Users.FirstOrDefaultAsync(record => record.UserEmail == user.UserEmail) as User;
+            result.UserSalt = user.UserSalt;
+            result.UserSaltPassword = user.UserSaltPassword;
+            _context.Entry(result).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }

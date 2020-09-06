@@ -39,6 +39,6 @@
         User reverification_user = await DAL.ResendEmail(registerUser);
         // Send verification mail again
         MailService mailService = new MailService();
-        mailService.SendMailWithSMTP(reverification_user.UserEmail, reverification_user.EmailLinkVerificationCode);
+        mailService.SendMailWithSMTP(reverification_user.UserEmail, "Reverification Email", reverification_user.EmailLinkVerificationCode);
     }
 }
